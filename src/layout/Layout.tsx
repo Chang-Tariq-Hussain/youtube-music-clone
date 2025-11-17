@@ -7,8 +7,10 @@ export default function Layout() {
     <div className="bg-[#0a0a0a] min-h-screen text-white">
       <Header />
       <div className="flex">
-        <Sidebar />
-        <div className="main">
+        <div className="flex">
+          <Sidebar />
+        </div>
+        <div className="flex-1 overflow-hidden">
           <Outlet />
         </div>
       </div>
