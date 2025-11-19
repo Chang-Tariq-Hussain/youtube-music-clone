@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { CiBookmark } from "react-icons/ci";
 import { GoHomeFill } from "react-icons/go";
-import { LuX } from "react-icons/lu";
+import { LuPlus, LuX } from "react-icons/lu";
 import { MdOutlineExplore } from "react-icons/md";
+import { SiYoutubemusic } from "react-icons/si";
 import { Link, useLocation } from "react-router";
 import useSidebarStore from "../../store/sidebarStore";
 
@@ -10,6 +11,7 @@ const links = [
   { to: "/", label: "Home", icon: GoHomeFill },
   { to: "/explore", label: "Explore", icon: MdOutlineExplore },
   { to: "/library", label: "Library", icon: CiBookmark },
+  { to: "/upgrade", label: "Upgrade", icon: SiYoutubemusic },
 ];
 
 export default function Sidebar() {
@@ -45,8 +47,8 @@ export default function Sidebar() {
   return (
     <>
       <div
-        className={`hidden sm:flex flex-col items-center ${
-          isSidebarOpen ? "lg:w-56" : "lg:w-20"
+        className={`hidden lg:border-r lg:border-outline sm:flex flex-col items-center ${
+          isSidebarOpen ? "lg:w-56" : "lg:w-20 lg:border-none"
         } w-20 h-[calc(100vh-63px)] sticky top-[63px] left-0 px-2 py-6 ${
           scrolled ? "border-r border-outline" : "bg-transparent"
         } transition-[width] duration-300 ease-in-out
@@ -70,13 +72,31 @@ export default function Sidebar() {
             <span className="mt-1">{label}</span>
           </Link>
         ))}
+
+        <div className={`${!isSidebarOpen && "hidden"} w-full`}>
+          {/* Divider */}
+          <div
+            className={`hidden ${
+              !isSidebarOpen && "hidden"
+            } lg:block lg:my-6 lg:mx-4 lg:h-px bg-outline `}
+            id="divider"
+          ></div>
+          <button
+            className={`hidden ${
+              !isSidebarOpen && "hidden"
+            } bg-surface-elevated h-9 px-2 w-[90%] lg:flex items-center justify-center gap-x-2 rounded-full`}
+          >
+            <LuPlus className="text-2xl" />
+            New playlist
+          </button>
+        </div>
       </div>
       <div
         className={`
           fixed top-0 left-0 z-20 w-56 h-screen lg:hidden ${
             scrolled ? " border-r border-outline" : ""
           } md:${
-          isSidebarOpen ? "relative" : "sticky md:top-[63px]"
+          isSidebarOpen ? "fixed" : "sticky md:top-[63px]"
         } bg-surface text-white px-2 py-4
           transition-transform duration-300
           ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
