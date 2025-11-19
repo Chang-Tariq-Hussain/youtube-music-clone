@@ -84,7 +84,7 @@ export default function Sidebar() {
           <button
             className={`hidden ${
               !isSidebarOpen && "hidden"
-            } bg-surface-elevated h-9 px-2 w-[90%] lg:flex items-center justify-center gap-x-2 rounded-full`}
+            } bg-surface-elevated h-9 px-2 w-[90%] mx-auto lg:flex items-center justify-center gap-x-2 rounded-full`}
           >
             <LuPlus className="text-2xl" />
             New playlist
@@ -130,6 +130,17 @@ export default function Sidebar() {
             </Link>
           ))}
         </nav>
+
+        <div className={` w-full`}>
+          {/* Divider */}
+          <div className={`my-6 mx-4 h-px bg-outline `} id="divider"></div>
+          <button
+            className={` bg-surface-elevated h-9 px-2 w-[90%] mx-auto flex items-center justify-center gap-x-2 rounded-full`}
+          >
+            <LuPlus className="text-2xl" />
+            New playlist
+          </button>
+        </div>
       </div>
     </>
   );
