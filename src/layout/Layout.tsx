@@ -4,7 +4,7 @@ import Sidebar from "./sidebar/Sidebar";
 
 export default function Layout() {
   return (
-    <div className="bg-[#0a0a0a] min-h-screen text-white">
+    <div className="bg-surface min-h-screen text-white">
       <Header />
       <div className="flex">
         <div className="flex">

@@ -17,7 +17,7 @@ export default function Header() {
   return (
     <div
       className={`sticky top-0 z-20 flex items-center justify-between px-6 py-4 ${
-        scrolled ? "bg-black border-b border-solid" : "bg-transparent"
+        scrolled ? "bg-black border-b border-outline" : "bg-transparent"
       }`}
     >
       <div className="flex items-center gap-x-4">

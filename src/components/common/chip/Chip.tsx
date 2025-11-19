@@ -16,7 +16,7 @@ export const Chip: React.FC<ChipProps> = ({ text, active, onClick }) => {
         ${
           active
             ? "bg-white text-black font-semibold"
-            : "bg-gray-700 text-white"
+            : "bg-[#1f1f1f] text-white"
         }
       `}
     >
