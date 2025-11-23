@@ -21,7 +21,7 @@ export type YoutubeVideo = {
     localized?: { title: string; description: string };
   };
   contentDetails?: {
-    duration: string;           // ISO 8601: PT4M13S
+    duration: string;
     dimension: string;
     definition: string;
     caption: string;
@@ -66,63 +66,54 @@ export type VideoPart =
 
 export type VideosListParams = {
   /** Required — The parts of video resource to include */
- part: readonly VideoPart[];
+  part: readonly VideoPart[];
 
   /** Filter results */
-  chart?: 'mostPopular';                    // Only valid value for chart-based lists
-  id?: string;                              // Comma-separated video IDs (e.g. "abc123,xyz789")
-  myRating?: 'like' | 'dislike';            // Return videos user liked/disliked
+  chart?: "mostPopular"; // Only valid value for chart-based lists
+  id?: string; // Comma-separated video IDs (e.g. "abc123,xyz789")
+  myRating?: "like" | "dislike"; // Return videos user liked/disliked
 
   /** Music & regional filters */
-  videoCategoryId?: string;                 // '10' = Music
-  regionCode?: string;                      // 'US', 'IN', 'GB', etc.
-  videoDuration?: 'any' | 'long' | 'medium' | 'short';
+  videoCategoryId?: string; // '10' = Music
+  regionCode?: string; // 'US', 'IN', 'GB', etc.
+  videoDuration?: "any" | "long" | "medium" | "short";
 
   /** Language & localization */
-  hl?: string;                              // Interface language (e.g. 'en', 'hi')
-  locale?: string;                          // Deprecated, but still accepted
+  hl?: string; // Interface language (e.g. 'en', 'hi')
+  locale?: string; // Deprecated, but still accepted
 
   /** Pagination */
-  maxResults?: number;                      // 0–50 (default: 5)
-  pageToken?: string;                       // Next/previous page token
+  maxResults?: number; // 0–50 (default: 5)
+  pageToken?: string; // Next/previous page token
 
   /** Date filters */
-  publishedAfter?: string;                  // RFC 3339 (e.g. '2024-01-01T00:00:00Z')
-  publishedBefore?: string;                 // RFC 3339
+  publishedAfter?: string; // RFC 3339 (e.g. '2024-01-01T00:00:00Z')
+  publishedBefore?: string; // RFC 3339
 
   /** Advanced filters */
-  forDeveloper?: boolean;                   // Restrict to developer's videos
-  managedByMe?: boolean;                    // For content owners
-  onBehalfOfContentOwner?: string;          // For CMS users
-  notifySubscribers?: boolean;              // Filter by notification setting
+  forDeveloper?: boolean; // Restrict to developer's videos
+  managedByMe?: boolean; // For content owners
+  onBehalfOfContentOwner?: string; // For CMS users
+  notifySubscribers?: boolean; // Filter by notification setting
 
   /** Rarely used but valid */
-  videoLicense?: 'any' | 'creativeCommon' | 'youtube';
-  videoEmbeddable?: 'any' | 'true';
-  videoSyndicated?: 'any' | 'true';
-  videoType?: 'any' | 'episode' | 'movie';
-};
-
-// Top Global Music Chart (Your YouTube Music Homepage)
-export const topMusicParams: VideosListParams = {
-  part: ['snippet', 'contentDetails', 'statistics'],
-  chart: 'mostPopular',
-  videoCategoryId: '10',
-  regionCode: 'US',
-  maxResults: 50,
+  videoLicense?: "any" | "creativeCommon" | "youtube";
+  videoEmbeddable?: "any" | "true";
+  videoSyndicated?: "any" | "true";
+  videoType?: "any" | "episode" | "movie";
 };
 
 // Fetch specific videos by ID
 export const videoDetailsParams: VideosListParams = {
-  part: ['snippet', 'contentDetails', 'statistics', 'player'],
-  id: 'dQw4w9WgXcQ',
+  part: ["snippet", "contentDetails", "statistics", "player"],
+  id: "dQw4w9WgXcQ",
 };
 
 // New releases in last 7 days (music only)
 export const newReleasesParams: VideosListParams = {
-  part: ['snippet', 'contentDetails'],
-  chart: 'mostPopular',
-  videoCategoryId: '10',
-  publishedAfter: '2025-11-16T00:00:00Z',
+  part: ["snippet", "contentDetails"],
+  chart: "mostPopular",
+  videoCategoryId: "10",
+  publishedAfter: "2025-11-16T00:00:00Z",
   maxResults: 25,
 };
