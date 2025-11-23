@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useFetchVideos } from "../../api/queries/videoQueries";
 import AlbumCard from "../../components/common/album-card/AlbumCard";
 import { Chip } from "../../components/common/chip/Chip";
 import QuickPickCard from "../../components/common/quick-pick-card/QuickPickCard";
@@ -128,6 +129,15 @@ const quickPicksData = [
 
 export default function Homepage() {
   const [active, setActive] = useState("Trending");
+  const { data, isLoading } = useFetchVideos({
+    part: ["snippet", "contentDetails", "statistics"],
+    chart: "mostPopular",
+    videoCategoryId: "10",
+    regionCode: "IN",
+    maxResults: 50,
+  });
+
+  console.log("data>>>>", data);
   return (
     <div
       className={`relative w-screen pb-40 sm:px-14 sm:w-[80vw] md:w-[85vw] lg:[90vw]`}
