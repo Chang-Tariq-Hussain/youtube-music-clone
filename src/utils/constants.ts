@@ -12,7 +12,7 @@ export const regions = [
 ];
 
 export const topMusicParams: VideosListParams = {
-  part: ["snippet", "contentDetails", "statistics"],
+  part: ["snippet", "contentDetails", "statistics", "player"],
   chart: "mostPopular",
   videoCategoryId: "10",
   regionCode: "IN",

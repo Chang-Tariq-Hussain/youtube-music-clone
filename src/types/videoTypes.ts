@@ -62,7 +62,8 @@ export type VideoPart =
   | "recordingDetails"
   | "statistics"
   | "status"
-  | "topicDetails";
+  | "topicDetails"
+  | "suggestions";
 
 export type VideosListParams = {
   /** Required — The parts of video resource to include */
