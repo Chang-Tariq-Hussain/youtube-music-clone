@@ -7,7 +7,7 @@ import {
   ThumbsUp,
   Volume2,
 } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { FaPause, FaPlay } from "react-icons/fa";
 import ReactPlayer from "react-player";
 import { usePlayerStore } from "../../store/playerStore";
@@ -25,24 +25,101 @@ export default function Player() {
     setProgress,
   } = usePlayerStore();
 
+  const initialState = {
+    src: undefined,
+    pip: false,
+    playing: false,
+    controls: false,
+    light: false,
+    volume: 1,
+    muted: false,
+    played: 0,
+    loaded: 0,
+    duration: 0,
+    playbackRate: 1.0,
+    loop: false,
+    seeking: false,
+    loadedSeconds: 0,
+    playedSeconds: 0,
+  };
+
+  type PlayerState = Omit<typeof initialState, "src"> & {
+    src?: string;
+  };
+
+  const [state, setState] = useState<PlayerState>(initialState);
+  const playerRef = useRef<HTMLVideoElement | null>(null);
   const [duration, setDuration] = useState(0);
 
   if (!currentTrack) return null;
 
-  const handleProgress = (state: any) => {
-    setProgress(state.played);
+  const handleProgress = () => {
+    const player = playerRef.current;
+    // We only want to update time slider if we are not currently seeking
+    if (!player || state.seeking || !player.buffered?.length) return;
+
+    console.log("onProgress");
+
+    setState((prevState) => ({
+      ...prevState,
+      loadedSeconds: player.buffered?.end(player.buffered?.length - 1),
+      loaded:
+        player.buffered?.end(player.buffered?.length - 1) / player.duration,
+    }));
   };
 
-  const handleDurationChange = (durationValue: any) => {
-    // ← FIXED: Use 'any' for param
-    const durationNum = typeof durationValue === "number" ? durationValue : 0; // Safe extraction
-    setDuration(durationNum);
+  console.log("playerRef", playerRef.current);
+
+  const handleSeekMouseDown = () => {
+    setState((prevState) => ({ ...prevState, seeking: true }));
+  };
+
+  const handleSeekChange = (event: React.SyntheticEvent<HTMLInputElement>) => {
+    const inputTarget = event.target as HTMLInputElement;
+    setState((prevState) => ({
+      ...prevState,
+      played: Number.parseFloat(inputTarget.value),
+    }));
+  };
+
+  const handleSeekMouseUp = (event: React.SyntheticEvent<HTMLInputElement>) => {
+    const inputTarget = event.target as HTMLInputElement;
+    setState((prevState) => ({ ...prevState, seeking: false }));
+    if (playerRef.current) {
+      playerRef.current.currentTime =
+        Number.parseFloat(inputTarget.value) * playerRef.current.duration;
+    }
+  };
+
+  const handleTimeUpdate = () => {
+    const player = playerRef.current;
+    // We only want to update time slider if we are not currently seeking
+    if (!player || state.seeking) return;
+
+    console.log("onTimeUpdate", player.currentTime);
+
+    if (!player.duration) return;
+
+    setState((prevState) => ({
+      ...prevState,
+      playedSeconds: player.currentTime,
+      played: player.currentTime / player.duration,
+    }));
+  };
+
+  const handleDurationChange = () => {
+    const player = playerRef.current;
+    if (!player) return;
+
+    console.log("onDurationChange", player.duration);
+    setState((prevState) => ({ ...prevState, duration: player.duration }));
   };
 
   return (
     <>
       {/* Hidden ReactPlayer — Audio Only */}
       <ReactPlayer
+        ref={playerRef}
         src={`https://www.youtube.com/watch?v=${currentTrack.id}`}
         playing={isPlaying}
         volume={volume}
@@ -50,7 +127,6 @@ export default function Player() {
         onDurationChange={handleDurationChange} // ← Now TS happy!
         width="0"
         height="0"
-        controls={true}
         style={{ position: "absolute", opacity: 0, pointerEvents: "none" }}
         config={{
           youtube: {
@@ -66,6 +142,9 @@ export default function Player() {
             },
           } as any,
         }}
+        onSeeking={(e) => console.log("onSeeking", e)}
+        onSeeked={(e) => console.log("onSeeked", e)}
+        onTimeUpdate={handleTimeUpdate}
       />
 
       {/* Miniplayer UI */}
@@ -138,13 +217,23 @@ export default function Player() {
             <Shuffle className="h-6 w-6 cursor-pointer text-gray-400" />
           </div>
         </div>
-
-        {/* Progress Bar */}
-        <div className="absolute top-0 left-0 right-0 h-1 bg-yt-red-accent cursor-pointer">
-          <div
-            className="h-full  transition-all duration-300"
-            style={{ width: `${progress * 100}%` }}
+        {/* Seek Bar */}
+        <div className="absolute -top-4 w-full">
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.001"
+            value={state.played}
+            onMouseDown={handleSeekMouseDown}
+            onChange={handleSeekChange}
+            onMouseUp={handleSeekMouseUp}
+            className="w-full h-1 cursor-pointer accent-yt-red-accent"
           />
+          <div className="flex justify-between text-gray-400 text-xs mt-1">
+            <span>{formatTime(state.playedSeconds)}</span>
+            <span>{formatTime(state.duration)}</span>
+          </div>
         </div>
       </div>
     </>
