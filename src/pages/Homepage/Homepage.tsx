@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import { useFetchVideos } from "../../api/queries/videoQueries";
 import { Chip } from "../../components/common/chip/Chip";
 import QuickPickCard from "../../components/common/quick-pick-card/QuickPickCard";
 import TextHeading from "../../components/common/text-heading/TextHeading";
 import Player from "../../layout/player/Player";
 import { usePlayerStore } from "../../store/playerStore";
+import type { YoutubeVideo } from "../../types/videoTypes";
 import { topMusicParams } from "../../utils/constants";
 
 export const categories = [
@@ -31,6 +33,12 @@ export default function Homepage() {
   const [active, setActive] = useState("Trending");
   const { data } = useFetchVideos(topMusicParams);
   const { playTrack } = usePlayerStore();
+  const navigate = useNavigate();
+
+  const handleClick = (item: YoutubeVideo) => {
+    playTrack(item);
+    navigate("/watch");
+  };
   return (
     <div
       className={`relative w-screen pb-40 sm:px-14 sm:w-[80vw] md:w-[85vw] lg:[90vw]`}
@@ -48,8 +56,8 @@ export default function Homepage() {
       <Player />
       <TextHeading text={"Most Popular"} />
       <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4">
-        {data?.items.map((item: any) => (
-          <button onClick={() => playTrack(item)}>
+        {data?.items.map((item: YoutubeVideo) => (
+          <button onClick={() => handleClick(item)}>
             <QuickPickCard record={item} />
           </button>
         ))}

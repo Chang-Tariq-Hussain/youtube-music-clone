@@ -1,10 +1,18 @@
-// src/components/Player/AudioOnlyPlayer.tsx
-import { Pause, Play, SkipBack, SkipForward, Volume2 } from "lucide-react";
+import {
+  Repeat,
+  Shuffle,
+  SkipBack,
+  SkipForward,
+  ThumbsDown,
+  ThumbsUp,
+  Volume2,
+} from "lucide-react";
 import { useState } from "react";
+import { FaPause, FaPlay } from "react-icons/fa";
 import ReactPlayer from "react-player";
 import { usePlayerStore } from "../../store/playerStore";
 
-export default function AudioOnlyPlayer() {
+export default function Player() {
   const {
     currentTrack,
     isPlaying,
@@ -16,8 +24,6 @@ export default function AudioOnlyPlayer() {
     progress,
     setProgress,
   } = usePlayerStore();
-
-  console.log("track>>>", currentTrack);
 
   const [duration, setDuration] = useState(0);
 
@@ -44,13 +50,14 @@ export default function AudioOnlyPlayer() {
         onDurationChange={handleDurationChange} // ← Now TS happy!
         width="0"
         height="0"
+        controls={true}
         style={{ position: "absolute", opacity: 0, pointerEvents: "none" }}
         config={{
           youtube: {
             playerVars: {
               autoplay: 1,
-              controls: 0,
-              showinfo: 0,
+              controls: 1,
+              showinfo: 1,
               rel: 0,
               modestbranding: 1,
               iv_load_policy: 3,
@@ -62,51 +69,60 @@ export default function AudioOnlyPlayer() {
       />
 
       {/* Miniplayer UI */}
-      <div className="fixed bottom-0 left-0 right-0 bg-black/95 backdrop-blur-2xl border-t border-white/10 z-50">
-        <div className="max-w-7xl mx-auto p-4 flex items-center justify-between">
-          <div className="hidden sm:flex items-center gap-4 flex-1">
-            <img
-              src={currentTrack.snippet?.thumbnails?.high?.url}
-              alt=""
-              className="w-14 h-14 rounded-lg object-cover"
-            />
-            <div>
-              <p className="text-white font-semibold w-[250px] md:w-[350px] lg:w-[600px] xl:w-full text-lg line-clamp-1 truncate">
-                {currentTrack?.snippet?.title}
-              </p>
-              <p className="text-gray-400 text-sm">
-                {currentTrack?.snippet?.channelTitle}
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-6">
+      <div className="fixed bottom-0 left-0 right-0 bg-surface-elevated backdrop-blur-2xl border-t border-white/10 z-50">
+        <div className="max-w-7xl mx-auto p-3 flex items-center justify-between gap-x-6">
+          <div className="flex items-center gap-x-2">
             <button
               onClick={prevTrack}
               className="text-white/70 hover:text-white p-2 rounded-full hover:bg-white/10"
             >
-              <SkipBack className="w-6 h-6" />
+              <SkipBack className="w-6 h-6 cursor-pointer" />
             </button>
             <button
               onClick={togglePlay}
-              className="bg-white text-black rounded-full p-4 hover:scale-110 transition"
+              className="p-4 hover:scale-110 transition"
             >
               {isPlaying ? (
-                <Pause className="w-6 h-6" />
+                <FaPause className="text-3xl cursor-pointer" />
               ) : (
-                <Play className="w-6 h-6 ml-0.5" />
+                <FaPlay className="text-3xl ml-0.5 cursor-pointer" />
               )}
             </button>
             <button
               onClick={nextTrack}
               className="text-white/70 hover:text-white p-2 rounded-full hover:bg-white/10"
             >
-              <SkipForward className="w-6 h-6" />
+              <SkipForward className="w-6 h-6 cursor-pointer" />
             </button>
+            <div className="flex items-center gap-x-2 font-sm text-gray-400 md:hidden">
+              <span>{formatTime(progress * duration)}</span>
+              <span>/</span>
+              <span>{formatTime(duration)}</span>
+            </div>
+          </div>
+
+          <div className="hidden sm:flex items-center justifiy-center gap-x-4 flex-1">
+            <img
+              src={currentTrack.snippet?.thumbnails?.high?.url}
+              alt=""
+              className="w-14 h-14 rounded-lg object-cover"
+            />
+            <div className="truncate">
+              <p className="text-white font-semibold w-[200px] md:w-[350px] lg:w-[500px] xl:w-full text-lg line-clamp-1 truncate">
+                {currentTrack?.snippet?.title.split("|")[0]}
+              </p>
+              <p className="text-gray-400 text-sm">
+                {currentTrack?.snippet?.channelTitle}
+              </p>
+            </div>
+            <div className="hidden lg:flex gap-x-6 ml-4">
+              <ThumbsUp className="h-6 w-6 cursor-pointer text-gray-400" />
+              <ThumbsDown className="h-6 w-6 cursor-pointer text-gray-400" />
+            </div>
           </div>
 
           <div className="flex items-center gap-3">
-            <Volume2 className="w-5 h-5 text-white/70" />
+            <Volume2 className="w-6 h-6 text-white/70" />
             <input
               type="range"
               min="0"
@@ -117,20 +133,18 @@ export default function AudioOnlyPlayer() {
               className="w-20 accent-white"
             />
           </div>
+          <div className="hidden lg:flex items-center gap-x-4">
+            <Repeat className="h-6 w-6 cursor-pointer text-gray-400" />
+            <Shuffle className="h-6 w-6 cursor-pointer text-gray-400" />
+          </div>
         </div>
 
         {/* Progress Bar */}
-        <div className="absolute top-0 left-0 right-0 h-1 bg-white/20">
+        <div className="absolute top-0 left-0 right-0 h-1 bg-yt-red-accent cursor-pointer">
           <div
-            className="h-full bg-linear-to-r from-white to-gray-300 transition-all duration-300"
+            className="h-full  transition-all duration-300"
             style={{ width: `${progress * 100}%` }}
           />
-        </div>
-
-        {/* Time Display */}
-        <div className="px-4 pb-2 text-xs text-gray-400 flex justify-between">
-          <span>{formatTime(progress * duration)}</span>
-          <span>{formatTime(duration)}</span>
         </div>
       </div>
     </>
