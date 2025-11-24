@@ -1,22 +1,15 @@
 import { LuPlay } from "react-icons/lu";
+import type { YoutubeVideo } from "../../../types/videoTypes";
+import { formatCount, formatTimeAgo } from "../../../utils/helpers";
 
-export interface IQuickPickCardProps {
-  image: string;
-  title: string;
-  info: [string];
-}
-export default function QuickPickCard({
-  record,
-}: {
-  record: IQuickPickCardProps;
-}) {
+export default function QuickPickCard({ record }: { record: YoutubeVideo }) {
   return (
     <div className="relative flex gap-4 p-2 rounded-lg hover:bg-white/10 transition group cursor-pointer">
       <div className="group relative">
         <img
-          src={record.image}
-          alt={record.title}
-          className="w-12 h-12 object-cover rounded-md shrink-0 transition-all duration-300 
+          src={record.snippet?.thumbnails?.medium?.url}
+          alt={record?.snippet?.title}
+          className="object-cover rounded-md shrink-0 transition-all duration-300 
                group-hover:brightness-75"
         />
         <div
@@ -29,13 +22,19 @@ export default function QuickPickCard({
       </div>
 
       <div className="flex flex-col justify-center min-w-0">
-        <p className="font-medium text-white truncate">{record.title}</p>
+        <p className="font-medium text-white truncate">
+          {record?.snippet?.title}
+        </p>
 
         <p className="text-sm text-gray-400 truncate">
-          {record.info.map((item, index) => (
+          {[
+            formatCount(record?.statistics?.viewCount),
+            record.snippet?.channelTitle,
+            formatTimeAgo(record?.snippet?.publishedAt),
+          ].map((item, index, list) => (
             <span key={index}>
               {item}
-              {index < record.info.length - 1 && (
+              {index < list.length - 1 && (
                 <span className="mx-1 select-none">•</span>
               )}
             </span>

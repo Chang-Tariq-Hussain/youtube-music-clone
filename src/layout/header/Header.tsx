@@ -36,7 +36,7 @@ export default function Header() {
       }`}
     >
       <div
-        className={`flex items-center gap-x-4 w-50 h-[70px]  lg:border-r lg:border-outline ${
+        className={`flex items-center shrink-0 gap-x-4 lg:w-50 h-[70px]  lg:border-r lg:border-outline ${
           scrolled && "border-none"
         } ${!isSidebarOpen && "border-none"}`}
       >
@@ -50,36 +50,38 @@ export default function Header() {
         />
       </div>
 
-      <div className="flex items-center gap-x-5 sm:pr-7 sm:gap-x-6">
-        <form
-          className={`${
-            !showSearchBox && "hidden"
-          } fixed top-2 left-2 z-30 bg-surface h-10 w-[97%] mr-2 sm:w-[480px] flex items-center border border-outline rounded-sm md:static md:bg-surface-elevated md:has-focus:bg-surface `}
-        >
-          <LuArrowLeft
-            className="text-white text-2xl mx-4 cursor-pointer md:hidden"
-            onClick={() => setShowSearchBox(false)}
-          />
-          <LuSearch
-            className={`hidden text-2xl cursor-pointer mx-4 md:block`}
-          />
-          <input
-            type="text"
-            placeholder="Search songs, albums, artists, podcasts"
-            className="text-white pr-5 bg-transparent w-full mr-10 outline-none"
-          />
-        </form>
-        <div className="flex items-center gap-x-5 sm:gap-x-6 shrink-0">
-          <LuSearch
-            className={`text-xl cursor-pointer ${
-              showSearchBox && "hidden"
-            } md:hidden`}
-            onClick={() => setShowSearchBox(true)}
-          />
-          <LuCast className="text-xl" />
-          <button className="group relative bg-orange-400 w-6 h-6 rounded-full text-white">
-            T
-          </button>
+      <div className="flex-1 pl-2 sm:pl-4 md:pl-8 lg:pl-14">
+        <div className="flex items-center sm:justify-between gap-x-5 sm:pr-7 sm:gap-x-6">
+          <form
+            className={`${
+              !showSearchBox && "hidden"
+            } fixed top-2 left-2 z-30 bg-surface h-10 w-[97%] mr-2 sm:w-[400px] flex items-center border border-outline rounded-sm md:static md:bg-surface-elevated md:has-focus:bg-surface `}
+          >
+            <LuArrowLeft
+              className="text-white text-2xl mx-4 cursor-pointer md:hidden"
+              onClick={() => setShowSearchBox(false)}
+            />
+            <LuSearch
+              className={`hidden text-2xl cursor-pointer mx-4 md:block`}
+            />
+            <input
+              type="text"
+              placeholder="Search songs, albums, artists, podcasts"
+              className="text-white pr-5 bg-transparent w-full mr-10 outline-none"
+            />
+          </form>
+          <div className="flex items-center ml-auto gap-x-5 sm:gap-x-6 shrink-0">
+            <LuSearch
+              className={`text-xl cursor-pointer ${
+                showSearchBox && "hidden"
+              } md:hidden`}
+              onClick={() => setShowSearchBox(true)}
+            />
+            <LuCast className="text-xl" />
+            <button className="group relative bg-orange-400 w-6 h-6 rounded-full text-white">
+              T
+            </button>
+          </div>
         </div>
       </div>
     </div>
