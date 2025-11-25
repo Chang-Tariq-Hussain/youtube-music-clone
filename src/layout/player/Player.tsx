@@ -148,7 +148,7 @@ export default function Player() {
       />
 
       {/* Miniplayer UI */}
-      <div className="fixed bottom-0 left-0 right-0 bg-surface-elevated backdrop-blur-2xl border-t border-white/10 z-50">
+      <div className="fixed bottom-0 left-0 right-0 bg-surface-elevated backdrop-blur-2xl z-50">
         <div className="max-w-7xl mx-auto p-3 flex items-center justify-between gap-x-6">
           <div className="flex items-center gap-x-2">
             <button
@@ -173,14 +173,14 @@ export default function Player() {
             >
               <SkipForward className="w-6 h-6 cursor-pointer" />
             </button>
-            <div className="flex items-center gap-x-2 font-sm text-gray-400 md:hidden">
-              <span>{formatTime(progress * duration)}</span>
+            {/* <div className="flex items-center gap-x-2 font-sm text-gray-400 md:hidden">
+              <span>{formatTime(state.playedSeconds)}</span>
               <span>/</span>
-              <span>{formatTime(duration)}</span>
-            </div>
+              <span>{formatTime(state.duration)}</span>
+            </div> */}
           </div>
 
-          <div className="hidden sm:flex items-center justifiy-center gap-x-4 flex-1">
+          <div className="hidden sm:flex items-center justify-center gap-x-4 flex-1">
             <img
               src={currentTrack.snippet?.thumbnails?.high?.url}
               alt=""
@@ -230,7 +230,7 @@ export default function Player() {
             onMouseUp={handleSeekMouseUp}
             className="w-full h-1 cursor-pointer accent-yt-red-accent"
           />
-          <div className="flex justify-between text-gray-400 text-xs mt-1">
+          <div className="flex justify-between px-4 text-gray-400 text-xs mt-1">
             <span>{formatTime(state.playedSeconds)}</span>
             <span>{formatTime(state.duration)}</span>
           </div>
