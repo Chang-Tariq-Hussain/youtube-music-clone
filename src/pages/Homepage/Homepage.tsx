@@ -4,7 +4,6 @@ import { useFetchVideos } from "../../api/queries/videoQueries";
 import { Chip } from "../../components/common/chip/Chip";
 import QuickPickCard from "../../components/common/quick-pick-card/QuickPickCard";
 import TextHeading from "../../components/common/text-heading/TextHeading";
-import Player from "../../layout/player/Player";
 import { usePlayerStore } from "../../store/playerStore";
 import type { YoutubeVideo } from "../../types/videoTypes";
 import { topMusicParams } from "../../utils/constants";
@@ -53,7 +52,7 @@ export default function Homepage() {
           />
         ))}
       </div>
-      <Player />
+      {/* <Player /> */}
       <TextHeading text={"Most Popular"} />
       <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4">
         {data?.items.map((item: YoutubeVideo) => (

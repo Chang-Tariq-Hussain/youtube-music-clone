@@ -2,42 +2,36 @@ import { useRelatedVideos } from "@/api/queries/useRelatedVideos";
 import QuickPickCard from "@/components/common/quick-pick-card/QuickPickCard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { YoutubeVideo } from "@/types/videoTypes";
-import Player from "../../layout/player/Player";
+import { useEffect } from "react";
 import { usePlayerStore } from "../../store/playerStore";
 
 export default function Watch() {
-  const {
-    currentTrack,
-    isPlaying,
-    togglePlay,
-    nextTrack,
-    prevTrack,
-    volume,
-    setVolume,
-    progress,
-    setProgress,
-    playTrack,
-  } = usePlayerStore();
+  const { currentTrack, queue, playTrack } = usePlayerStore();
 
   const { data: upNext = [] } = useRelatedVideos(currentTrack!.id);
   const handleClick = (item: YoutubeVideo) => {
     playTrack(item);
   };
+
+  useEffect(() => {
+    if (queue.length === 0) playTrack(currentTrack!, upNext);
+  }, [currentTrack, upNext]);
   const tabs = [
     {
       value: "up_next",
       label: "UP NEXT",
       content: (
         <div className="flex flex-col overflow-y-auto scrollbar h-[60vh]">
-          {upNext?.map((item: YoutubeVideo) => (
-            <button onClick={() => handleClick(item)}>
-              <QuickPickCard
-                record={item}
-                imageWidth={"md"}
-                imageHeight={"sm"}
-              />
-            </button>
-          ))}
+          {queue &&
+            queue.map((item: YoutubeVideo, index: number) => (
+              <button onClick={() => handleClick(item)} key={item?.id || index}>
+                <QuickPickCard
+                  record={item}
+                  imageWidth={"md"}
+                  imageHeight={"sm"}
+                />
+              </button>
+            ))}
         </div>
       ),
     },
@@ -97,7 +91,7 @@ export default function Watch() {
           ))}
         </Tabs>
       </div>
-      <Player />
+      {/* <Player /> */}
     </div>
   );
 }

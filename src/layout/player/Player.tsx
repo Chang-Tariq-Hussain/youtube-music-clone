@@ -23,6 +23,10 @@ export default function Player() {
     setVolume,
     progress,
     setProgress,
+    setPlayedSeconds,
+    playedSeconds,
+    setDuration,
+    duration,
   } = usePlayerStore();
 
   const initialState = {
@@ -40,7 +44,7 @@ export default function Player() {
     loop: false,
     seeking: false,
     loadedSeconds: 0,
-    playedSeconds: 0,
+    // playedSeconds: 0,
   };
 
   type PlayerState = Omit<typeof initialState, "src"> & {
@@ -49,7 +53,6 @@ export default function Player() {
 
   const [state, setState] = useState<PlayerState>(initialState);
   const playerRef = useRef<HTMLVideoElement | null>(null);
-  const [duration, setDuration] = useState(0);
 
   if (!currentTrack) return null;
 
@@ -58,8 +61,6 @@ export default function Player() {
     // We only want to update time slider if we are not currently seeking
     if (!player || state.seeking || !player.buffered?.length) return;
 
-    console.log("onProgress");
-
     setState((prevState) => ({
       ...prevState,
       loadedSeconds: player.buffered?.end(player.buffered?.length - 1),
@@ -67,8 +68,6 @@ export default function Player() {
         player.buffered?.end(player.buffered?.length - 1) / player.duration,
     }));
   };
-
-  console.log("playerRef", playerRef.current);
 
   const handleSeekMouseDown = () => {
     setState((prevState) => ({ ...prevState, seeking: true }));
@@ -80,6 +79,7 @@ export default function Player() {
       ...prevState,
       played: Number.parseFloat(inputTarget.value),
     }));
+    // setProgress(state.playedSeconds);
   };
 
   const handleSeekMouseUp = (event: React.SyntheticEvent<HTMLInputElement>) => {
@@ -96,13 +96,11 @@ export default function Player() {
     // We only want to update time slider if we are not currently seeking
     if (!player || state.seeking) return;
 
-    console.log("onTimeUpdate", player.currentTime);
-
     if (!player.duration) return;
-
+    setPlayedSeconds(player.currentTime);
     setState((prevState) => ({
       ...prevState,
-      playedSeconds: player.currentTime,
+      // playedSeconds: player.currentTime,
       played: player.currentTime / player.duration,
     }));
   };
@@ -111,23 +109,24 @@ export default function Player() {
     const player = playerRef.current;
     if (!player) return;
 
-    console.log("onDurationChange", player.duration);
     setState((prevState) => ({ ...prevState, duration: player.duration }));
+    setDuration(player.duration);
   };
 
   return (
     <>
       {/* Hidden ReactPlayer — Audio Only */}
+
       <ReactPlayer
         ref={playerRef}
         src={`https://www.youtube.com/watch?v=${currentTrack.id}`}
         playing={isPlaying}
         volume={volume}
         onProgress={handleProgress}
-        onDurationChange={handleDurationChange} // ← Now TS happy!
+        onDurationChange={handleDurationChange}
         width="0"
         height="0"
-        style={{ position: "absolute", opacity: 0, pointerEvents: "none" }}
+        style={{ position: "fixed", opacity: 0, pointerEvents: "none" }}
         config={{
           youtube: {
             playerVars: {
@@ -142,8 +141,6 @@ export default function Player() {
             },
           } as any,
         }}
-        onSeeking={(e) => console.log("onSeeking", e)}
-        onSeeked={(e) => console.log("onSeeked", e)}
         onTimeUpdate={handleTimeUpdate}
       />
 
@@ -168,7 +165,7 @@ export default function Player() {
               )}
             </button>
             <button
-              onClick={nextTrack}
+              onClick={() => nextTrack()}
               className="text-white/70 hover:text-white p-2 rounded-full hover:bg-white/10"
             >
               <SkipForward className="w-6 h-6 cursor-pointer" />
@@ -231,8 +228,8 @@ export default function Player() {
             className="w-full h-1 cursor-pointer accent-yt-red-accent"
           />
           <div className="flex justify-between px-4 text-gray-400 text-xs mt-1">
-            <span>{formatTime(state.playedSeconds)}</span>
-            <span>{formatTime(state.duration)}</span>
+            <span>{formatTime(playedSeconds)}</span>
+            <span>{formatTime(duration)}</span>
           </div>
         </div>
       </div>
