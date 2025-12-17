@@ -9,6 +9,8 @@ interface PlayerState {
   isMiniplayer: boolean;
   volume: number;
   progress: number;
+  playedSeconds: number;
+  duration: number;
 
   // Actions
   playTrack: (track: YoutubeVideo, newQueue?: YoutubeVideo[]) => void;
@@ -18,6 +20,8 @@ interface PlayerState {
   toggleMiniplayer: () => void;
   setVolume: (volume: number) => void;
   setProgress: (progress: number) => void;
+  setPlayedSeconds: (playedSeconds: number) => void;
+  setDuration: (duration: number) => void;
 }
 
 export const usePlayerStore = create<PlayerState>((set, get) => ({
@@ -27,6 +31,10 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
   isMiniplayer: true,
   volume: 0.7,
   progress: 0,
+  playedSeconds: 0,
+
+  duration: 0,
+  setDuration: (duration) => set({ duration }),
 
   playTrack: (track: YoutubeVideo, newQueue = []) =>
     set({
@@ -70,4 +78,5 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
   setVolume: (volume) => set({ volume }),
 
   setProgress: (progress) => set({ progress }),
+  setPlayedSeconds: (playedSeconds) => set({ playedSeconds }),
 }));
