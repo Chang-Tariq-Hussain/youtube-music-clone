@@ -1,0 +1,17 @@
+.swiper {
+  width: 100%;
+  height: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.swiper-button-prev-custom.swiper-button-disabled,
+.swiper-button-next-custom.swiper-button-disabled {
+  @apply opacity-40 cursor-not-allowed;
+}
+
+/* Optional: change hover behavior when disabled */
+.swiper-button-prev-custom.swiper-button-disabled:hover,
+.swiper-button-next-custom.swiper-button-disabled:hover {
+  @apply bg-transparent;
+}
