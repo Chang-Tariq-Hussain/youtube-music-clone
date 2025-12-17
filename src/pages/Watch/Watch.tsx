@@ -14,7 +14,8 @@ export default function Watch() {
   };
 
   useEffect(() => {
-    if (queue.length === 0) playTrack(currentTrack!, upNext);
+    if (queue.length === 0 || upNext[0]?.id !== queue[0]?.id)
+      playTrack(currentTrack!, upNext);
   }, [currentTrack, upNext]);
   const tabs = [
     {

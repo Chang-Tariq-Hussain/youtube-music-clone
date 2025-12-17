@@ -13,7 +13,7 @@ export const fetchVideos = async (
   const [_key, params] = context.queryKey;
   const requestParams = {
     ...params,
-    part: params.part.join(","), // ← This is the magic line
+    part: params.part.join(","),
   };
   try {
     const { data } = await youtubeApi.get<VideosListResponse>("/videos", {
