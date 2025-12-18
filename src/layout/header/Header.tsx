@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { LuAlignJustify, LuArrowLeft, LuCast, LuSearch } from "react-icons/lu";
+import { useNavigate } from "react-router";
 import useSidebarStore from "../../store/sidebarStore";
 
 export default function Header() {
@@ -8,6 +9,8 @@ export default function Header() {
     window.innerWidth > 768 ? true : false
   );
   const [scrolled, setScrolled] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,6 +32,10 @@ export default function Header() {
     return () => window.removeEventListener("resize", handleWindowSize);
   }, []);
 
+  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    navigate(`/search/?q=${searchQuery}`);
+  };
   return (
     <div
       className={`sticky top-0 z-20 flex items-center justify-between px-6 py-4 h-16 ${
@@ -53,6 +60,7 @@ export default function Header() {
       <div className="flex-1 pl-2 sm:pl-4 md:pl-8 lg:pl-14">
         <div className="flex items-center sm:justify-between gap-x-5 sm:pr-7 sm:gap-x-6">
           <form
+            onSubmit={handleSearch}
             className={`${
               !showSearchBox && "hidden"
             } fixed top-2 left-2 z-30 bg-surface h-10 w-[97%] mr-2 sm:w-[400px] flex items-center border border-outline rounded-sm md:static md:bg-surface-elevated md:has-focus:bg-surface `}
@@ -68,6 +76,8 @@ export default function Header() {
               type="text"
               placeholder="Search songs, albums, artists, podcasts"
               className="text-white pr-5 bg-transparent w-full mr-10 outline-none"
+              onChange={(e) => setSearchQuery(e.target.value)}
+              value={searchQuery}
             />
           </form>
           <div className="flex items-center ml-auto gap-x-5 sm:gap-x-6 shrink-0">

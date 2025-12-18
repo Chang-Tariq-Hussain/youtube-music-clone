@@ -18,3 +18,16 @@ export const topMusicParams: VideosListParams = {
   regionCode: "IN",
   maxResults: 20,
 };
+
+export const defaultSearchParams = {
+  part: "snippet",
+  maxResults: 20,
+};
+
+export const musicSearchParams = {
+  part: "snippet",
+  type: "video,playlist", // Videos (tracks) + playlists (albums)
+  videoCategoryId: "10", // Music only
+  maxResults: 50,
+  // q: userQuery                 // Dynamic from input
+};

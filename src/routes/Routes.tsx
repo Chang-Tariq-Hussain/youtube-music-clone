@@ -1,3 +1,4 @@
+import SearchResults from "@/pages/SearchResults/SearchResults";
 import { Route, Routes } from "react-router";
 import Layout from "../layout/Layout";
 import Homepage from "../pages/Homepage/Homepage";
@@ -13,6 +14,7 @@ export default function RoutesConfig() {
           <Route path="/library" element={<h1>Library</h1>} />
           <Route path="/upgrade" element={<h1>Upgrade</h1>} />
           <Route path="/watch" element={<Watch />} />
+          <Route path="/search" element={<SearchResults />} />
         </Route>
       </Routes>
     </>
