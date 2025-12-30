@@ -7,7 +7,7 @@ const fetchSearchResults = async (query: string) => {
 
   try {
     const { data } = await youtubeApi.get(
-      `/search?q=${encodeURIComponent(query)}`
+      `/search?q=${encodeURIComponent(query)}&part=snippet`
     );
     console.log("search data>>>", data);
     return data ?? [];

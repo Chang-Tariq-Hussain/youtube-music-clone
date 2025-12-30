@@ -7,6 +7,7 @@ import { usePlayerStore } from "../../store/playerStore";
 
 export default function Watch() {
   const { currentTrack, queue, playTrack } = usePlayerStore();
+  const snippet = currentTrack?.snippet;
 
   const { data: upNext = [] } = useRelatedVideos(currentTrack!.id);
   const handleClick = (item: YoutubeVideo) => {
@@ -51,8 +52,10 @@ export default function Watch() {
     <div className="px-14 mt-6 flex flex-col md:flex-row gap-x-8">
       <div className="flex-[60%]">
         <img
-          src={currentTrack?.snippet?.thumbnails?.standard?.url}
-          alt={currentTrack?.snippet?.title}
+          src={
+            snippet?.thumbnails?.standard?.url || snippet?.thumbnails?.high?.url
+          }
+          alt={snippet?.title}
         />
       </div>
       <div className="flex-[40%] mt-8">
